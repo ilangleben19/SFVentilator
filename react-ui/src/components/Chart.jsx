@@ -44,7 +44,7 @@ export default function Chart({ colors, data, suggestedMin, suggestedMax, title 
 
     let labelTracker = 0;
     const options = {
-        defaultFontFamily: defaults.global.defaultFontFamily = "Product Sans",
+        defaultFontFamily: defaults.global.defaultFontFamily = "Roboto",
         defaultFontSize: defaults.global.defaultFontSize = 20,
         legend: {
             display: false,

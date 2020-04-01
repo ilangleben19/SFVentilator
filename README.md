@@ -15,6 +15,8 @@ Libraries needed:
 
 The RPi is connected to the Arduino over a simple USB serial connection. It runs a React web app in Google Chrome's fullscreen kiosk mode. A Node.js server acts as the middleman between the two devices, transmitting data between them and storing any persistent data on disk.
 
+Note that the cursor is hidden in the web app. It should be run in Developer Tool's device mode, with resolution set to 1280 x 800.
+
 #### Prerequisites
 
 Update your computer:
@@ -66,4 +68,4 @@ CAREFUL - This step is optional and should only be done on an actual Raspberry P
 $ sudo echo "@lxterminal -e node /home/pi/SFVentilator/backend/index.js" >> /etc/xdg/lxsession/LXDE-pi/autostart
 ````
 
-And just reboot and you're done! :)
+And just reboot and you're done! The Node.js server will automatically start the React app in a fullscreen browser.
