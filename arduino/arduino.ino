@@ -44,7 +44,7 @@ Adafruit_BMP280 Esensor;
 //------------------------------------variables----------------------------------------------
 
 //regulator variables
-int maxRegAngle = 107;   //subject to change on the rotation capacity of regulator
+int maxRegAngle = 107; //subject to change on the rotation capacity of regulator
 int inhale = 0;
 int closed = 53.5;
 int exhale = 107;
@@ -53,14 +53,12 @@ int exhale = 107;
 int maxACAngle = 50; //subject to change on the rotation of needle valve
 int maxO2Angle = 50;
 
-
-
 //settings-variables (SUBJECT TO CHANGE BASED ON RPi)
-double OkErrFiO2 = 5;         //percentage
+double OkErrFiO2 = 5; //percentage
 double FiO2margin = OkErrFiO2 / 100;
-double OkErrIEP = 10;         //percentage
+double OkErrIEP = 10; //percentage
 double Pmargin = OkErrIEP / 100;
-double OkErrTemp = 0.2;       //degrees celsius
+double OkErrTemp = 0.2; //degrees celsius
 double HumMargBadTemp;
 double HumMargGoodTemp;
 double OkErrVE = 1500;
@@ -70,8 +68,8 @@ double Pexhale; //lungpress
 double Pinhale; //lungpress
 double Pchamber;
 double FiO2f = 21;
-double Pdesiredinhale = 103230;    //called pexhale
-double Pdesiredexhale = 103275;   //called pinhale
+double Pdesiredinhale = 103230; //called pexhale
+double Pdesiredexhale = 103275; //called pinhale
 double Hmax = 35;
 double Hmin = 25;
 double breathDuration;
@@ -100,7 +98,8 @@ boolean cancelledSensorBrokenAlarm;
 
 //----------------------------------setup(): starting entities-------------------------------------------
 
-void setup() {
+void setup()
+{
 
   Regulator.attach(41);
   AirCompressor.attach(42);
@@ -115,12 +114,14 @@ void setup() {
   delay(1000);
 
   //commence sensor BME280 at pressure chamber
-  if (!PCsensor.begin(0x76)) {
+  if (!PCsensor.begin(0x76))
+  {
     Serial.println("Could not find a valid Pressure Chamber sensor, check wiring!");
   }
 
   //commence sensor BME280 at regulator cave
-  if (!Esensor.begin(0x77)) {
+  if (!Esensor.begin(0x77))
+  {
     Serial.println("Could not find a valid Exhale sensor, check wiring!");
   }
 
@@ -169,13 +170,14 @@ void setup() {
 
   Pexhale = hPaToCmH2O(Esensor.readPressure());
 
-  while (Pexhale > Pdesiredexhale) {
+  while (Pexhale > Pdesiredexhale)
+  {
     //test for the pressure, stop when it reaches the desired exhale
     mixture();
     delay(1000);
     Pexhale = hPaToCmH2O(Esensor.readPressure());
     lcd.print(Pexhale);
-    Serial.println("LungPress|" + (String) Pexhale);
+    Serial.println("LungPress|" + (String)Pexhale);
     buttonled();
   }
 
@@ -189,7 +191,8 @@ void setup() {
 //----------------------------------loop()------------------------------------------------------------
 double timeAtStartofBreath;
 
-void loop() {
+void loop()
+{
 
   //test all sensors
   int tempcount = 0;
@@ -200,13 +203,16 @@ void loop() {
   buttonled();
 
   //temperature
-  for (int i = 0; i < L; i++) {
+  for (int i = 0; i < L; i++)
+  {
     double test = PCsensor.readTemperature();
-    if (test == NULL) {
+    if (test == NULL)
+    {
       tempcount++;
     }
   }
-  if (tempcount == L) {
+  if (tempcount == L)
+  {
     cancelledSensorBrokenAlarm = false;
     Serial.println("SensorBrokenAlarm|1");
 
@@ -214,9 +220,12 @@ void loop() {
     digitalWrite(49, LOW);
     digitalWrite(47, HIGH);
   }
-  else {
-    if (!cancelledSensorBrokenAlarm) {
-      for (int i  = 0; i < 10; i++) {
+  else
+  {
+    if (!cancelledSensorBrokenAlarm)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("SensorBrokenAlarm|0");
       }
       cancelledSensorBrokenAlarm = true;
@@ -228,13 +237,16 @@ void loop() {
   }
 
   //pressure at exhale
-  for (int i = 0; i < L; i++) {
+  for (int i = 0; i < L; i++)
+  {
     double test = Esensor.readPressure();
-    if (test == NULL) {
+    if (test == NULL)
+    {
       Pexhalecount++;
     }
   }
-  if (Pexhalecount == L) {
+  if (Pexhalecount == L)
+  {
     cancelledSensorBrokenAlarm = false;
     Serial.println("SensorBrokenAlarm|1");
 
@@ -242,9 +254,12 @@ void loop() {
     digitalWrite(49, LOW);
     digitalWrite(47, HIGH);
   }
-  else {
-    if (!cancelledSensorBrokenAlarm) {
-      for (int i  = 0; i < 10; i++) {
+  else
+  {
+    if (!cancelledSensorBrokenAlarm)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("SensorBrokenAlarm|0");
       }
       cancelledSensorBrokenAlarm = true;
@@ -256,13 +271,16 @@ void loop() {
   }
 
   //pressure at chamber
-  for (int i = 0; i < L; i++) {
+  for (int i = 0; i < L; i++)
+  {
     double test = PCsensor.readPressure();
-    if (test == NULL) {
+    if (test == NULL)
+    {
       Pchambercount++;
     }
   }
-  if (Pchambercount == L) {
+  if (Pchambercount == L)
+  {
     cancelledSensorBrokenAlarm = false;
     Serial.println("SensorBrokenAlarm|1");
 
@@ -270,9 +288,12 @@ void loop() {
     digitalWrite(49, LOW);
     digitalWrite(47, HIGH);
   }
-  else {
-    if (!cancelledSensorBrokenAlarm) {
-      for (int i  = 0; i < 10; i++) {
+  else
+  {
+    if (!cancelledSensorBrokenAlarm)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("SensorBrokenAlarm|0");
       }
       cancelledSensorBrokenAlarm = true;
@@ -284,13 +305,16 @@ void loop() {
   }
 
   //humidity
-  for (int i = 0; i < L; i++) {
+  for (int i = 0; i < L; i++)
+  {
     double test = PCsensor.readHumidity();
-    if (test == NULL) {
+    if (test == NULL)
+    {
       Hcount++;
     }
   }
-  if (Hcount == L) {
+  if (Hcount == L)
+  {
     cancelledSensorBrokenAlarm = false;
     Serial.println("SensorBrokenAlarm|1");
 
@@ -298,9 +322,12 @@ void loop() {
     digitalWrite(49, LOW);
     digitalWrite(47, HIGH);
   }
-  else {
-    if (!cancelledSensorBrokenAlarm) {
-      for (int i  = 0; i < 10; i++) {
+  else
+  {
+    if (!cancelledSensorBrokenAlarm)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("SensorBrokenAlarm|0");
       }
       cancelledSensorBrokenAlarm = true;
@@ -322,18 +349,21 @@ void loop() {
   Temperature = PCsensor.readTemperature();
   Humidity = PCsensor.readHumidity();
 
-  Serial.println("Temp|" + (String) Temperature);
-  Serial.println("Hum|" + (String) Humidity);
+  Serial.println("Temp|" + (String)Temperature);
+  Serial.println("Hum|" + (String)Humidity);
 
   //temp and humidity to be checked every breath
-  if (Temperature > Temperature - 0.2 && Temperature < Temperature + 0.2) {
-    if (Humidity > (Hmax - HumMargGoodTemp) || Humidity < (Hmin + HumMargGoodTemp)) {
-      if (Humidity < Hmax  && Humidity > Hmin) {
+  if (Temperature > Temperature - 0.2 && Temperature < Temperature + 0.2)
+  {
+    if (Humidity > (Hmax - HumMargGoodTemp) || Humidity < (Hmin + HumMargGoodTemp))
+    {
+      if (Humidity < Hmax && Humidity > Hmin)
+      {
         //print warning on ui
         lcd.print("Hum:");
-        lcd.print((int) Humidity);
+        lcd.print((int)Humidity);
         lcd.println("Temp:");
-        lcd.print((int) Temperature);
+        lcd.print((int)Temperature);
 
         cancelledHumWarn = false;
         Serial.println("HumWarn|1");
@@ -342,8 +372,10 @@ void loop() {
         digitalWrite(49, LOW);
         digitalWrite(47, HIGH);
 
-        if (!cancelledHumAlarm) {
-          for (int i = 0; i < 10; i++) {
+        if (!cancelledHumAlarm)
+        {
+          for (int i = 0; i < 10; i++)
+          {
             Serial.println("HumAlarm|0");
           }
           cancelledHumAlarm = true;
@@ -353,11 +385,12 @@ void loop() {
           digitalWrite(47, LOW);
         }
       }
-      else {
+      else
+      {
         lcd.print("Hum:");
-        lcd.print((int) Humidity);
+        lcd.print((int)Humidity);
         lcd.println("Temp:");
-        lcd.print((int) Temperature);
+        lcd.print((int)Temperature);
 
         cancelledHumAlarm = false;
         Serial.println("HumAlarm|1");
@@ -366,8 +399,10 @@ void loop() {
         digitalWrite(49, LOW);
         digitalWrite(47, HIGH);
 
-        if (!cancelledHumWarn) {
-          for (int i = 0; i < 10; i++) {
+        if (!cancelledHumWarn)
+        {
+          for (int i = 0; i < 10; i++)
+          {
             Serial.println("HumWarn|0");
           }
           cancelledHumWarn = true;
@@ -378,21 +413,25 @@ void loop() {
         }
       }
     }
-    else {
+    else
+    {
       lcd.print("Hum:");
-      lcd.print((int) Humidity);
+      lcd.print((int)Humidity);
       lcd.println("Temp:");
-      lcd.print((int) Temperature);
+      lcd.print((int)Temperature);
     }
   }
-  else {
-    if (Humidity > (Hmax - HumMargBadTemp) || Humidity < (Hmin - HumMargBadTemp)) {
-      if (Humidity < Hmax && Humidity > Hmin) {
+  else
+  {
+    if (Humidity > (Hmax - HumMargBadTemp) || Humidity < (Hmin - HumMargBadTemp))
+    {
+      if (Humidity < Hmax && Humidity > Hmin)
+      {
         //print warning on ui
         lcd.print("Hum:");
-        lcd.print((int) Humidity);
+        lcd.print((int)Humidity);
         lcd.println("Temp:");
-        lcd.print((int) Temperature);
+        lcd.print((int)Temperature);
 
         cancelledHumWarn = false;
         Serial.println("HumWarn|1");
@@ -401,8 +440,10 @@ void loop() {
         digitalWrite(49, LOW);
         digitalWrite(47, HIGH);
 
-        if (!cancelledHumAlarm) {
-          for (int i = 0; i < 10; i++) {
+        if (!cancelledHumAlarm)
+        {
+          for (int i = 0; i < 10; i++)
+          {
             Serial.println("HumAlarm|0");
           }
           cancelledHumAlarm = true;
@@ -412,11 +453,12 @@ void loop() {
           digitalWrite(47, LOW);
         }
       }
-      else {
+      else
+      {
         lcd.print("Hum:");
-        lcd.print((int) Humidity);
+        lcd.print((int)Humidity);
         lcd.println("Temp:");
-        lcd.print((int) Temperature);
+        lcd.print((int)Temperature);
 
         cancelledHumAlarm = false;
         Serial.println("HumAlarm|1");
@@ -425,8 +467,10 @@ void loop() {
         digitalWrite(49, LOW);
         digitalWrite(47, HIGH);
 
-        if (!cancelledHumWarn) {
-          for (int i = 0; i < 10; i++) {
+        if (!cancelledHumWarn)
+        {
+          for (int i = 0; i < 10; i++)
+          {
             Serial.println("HumWarn|0");
           }
           cancelledHumWarn = true;
@@ -437,27 +481,28 @@ void loop() {
         }
       }
     }
-    else {
+    else
+    {
       lcd.print("Hum:");
-      lcd.print((int) Humidity);
+      lcd.print((int)Humidity);
       lcd.println("Temp:");
-      lcd.print((int) Temperature);
+      lcd.print((int)Temperature);
     }
   }
 
   buttonled();
 
   receiveData();
-  OkErrFiO2 = interpretData("OkErrFiO2", OkErrFiO2);         //percentage
+  OkErrFiO2 = interpretData("OkErrFiO2", OkErrFiO2); //percentage
   FiO2margin = OkErrFiO2 / 100;
-  OkErrIEP = interpretData("OkErrIEP", OkErrIEP);         //percentage
+  OkErrIEP = interpretData("OkErrIEP", OkErrIEP); //percentage
   Pmargin = OkErrIEP / 100;
-  OkErrTemp = interpretData("OkErrTemp", OkErrTemp);       //degrees celsius
+  OkErrTemp = interpretData("OkErrTemp", OkErrTemp); //degrees celsius
   HumMargBadTemp = interpretData("HumMargBadTemp", OkErrTemp);
   HumMargGoodTemp = interpretData("HumMargBadTemp", OkErrTemp);
   OkErrVE = interpretData("OkErrVE", OkErrVE);
   FiO2f = interpretData("DesFiO2", FiO2f);
-  Pdesiredinhale = interpretData("Pinhale", Pdesiredinhale);    //called pexhale
+  Pdesiredinhale = interpretData("Pinhale", Pdesiredinhale); //called pexhale
   Hmax = interpretData("MaxHum", Hmax);
   Hmin = interpretData("MinHum", Hmin);
   manualBreathDuration = interpretData("RR", breathDuration);
@@ -467,12 +512,12 @@ void loop() {
 
   buttonled();
 
-  if (manualBreathDuration == 0) {
+  if (manualBreathDuration == 0)
+  {
 
     //after exhale
     {
-   Regulator.write(closed);
-
+      Regulator.write(closed);
     }
 
     buttonled();
@@ -487,10 +532,11 @@ void loop() {
     double intimei = millis();
 
     Pinhale = hPaToCmH2O(Esensor.readPressure());
-    while (Pinhale < Pdesiredinhale) {
+    while (Pinhale < Pdesiredinhale)
+    {
 
       Pinhale = hPaToCmH2O(Esensor.readPressure());
-      Serial.println("LungPress|" + (String) Pinhale);
+      Serial.println("LungPress|" + (String)Pinhale);
 
       buttonled();
     }
@@ -512,15 +558,15 @@ void loop() {
     double extimei = millis();
 
     Pexhale = hPaToCmH2O(Esensor.readPressure());
-    while (Pexhale > Pdesiredexhale) {
+    while (Pexhale > Pdesiredexhale)
+    {
       //test for the pressure, stop when it reaches the desired exhale
       mixture();
       Pexhale = hPaToCmH2O(Esensor.readPressure());
-      Serial.println("LungPress|" + (String) Pexhale);
+      Serial.println("LungPress|" + (String)Pexhale);
 
       buttonled();
     }
-
 
     extimef = millis() - intimei;
 
@@ -528,11 +574,12 @@ void loop() {
     RR = 60 / breathDuration;
 
     VE = VT * RR;
-    Serial.println("RR|" + (String) RR);
+    Serial.println("RR|" + (String)RR);
 
     buttonled();
   }
-  else {
+  else
+  {
     double manualInhaleDuration = (intimef * manualBreathDuration) / breathDuration;
     double manualExhaleDuration = (extimef * manualBreathDuration) / breathDuration;
     double manualregtime = (regtime * manualBreathDuration) / breathDuration;
@@ -556,10 +603,11 @@ void loop() {
     Pinhale = hPaToCmH2O(Esensor.readPressure());
     double intimeman = millis();
     double intimeman_helper = millis();
-    while (intimeman < intimeman_helper + manualExhaleDuration) {
+    while (intimeman < intimeman_helper + manualExhaleDuration)
+    {
 
       Pinhale = hPaToCmH2O(Esensor.readPressure());
-      Serial.println("LungPress|" + (String) Pinhale);
+      Serial.println("LungPress|" + (String)Pinhale);
       intimeman = millis();
 
       buttonled();
@@ -582,35 +630,38 @@ void loop() {
     Pexhale = hPaToCmH2O(Esensor.readPressure());
     double extimeman = millis();
     double extimeman_helper = millis();
-    while (extimeman < extimeman_helper + manualExhaleDuration) {
+    while (extimeman < extimeman_helper + manualExhaleDuration)
+    {
       //test for the pressure, stop when it reaches the desired exhale
       mixture();
       Pexhale = hPaToCmH2O(Esensor.readPressure());
-      Serial.println("LungPress|" + (String) Pexhale);
+      Serial.println("LungPress|" + (String)Pexhale);
       extimeman = millis();
 
       buttonled();
     }
 
     VE = VT * manualBreathDuration;
-    Serial.println("RR|" + (String) manualBreathDuration);
+    Serial.println("RR|" + (String)manualBreathDuration);
   }
 
-  Serial.println("VT|" + (String) VT);
-  Serial.println("VE|" + (String) VE);
+  Serial.println("VT|" + (String)VT);
+  Serial.println("VE|" + (String)VE);
 }
 
 //-------------------------------------------------------------------------mixture function----------------------------------------------------------------
 
-void mixture() {
+void mixture()
+{
   //check pressure of chamber
   Serial.println("enter mixture change");
 
   Pchamber = hPaToCmH2O(PCsensor.readPressure());
 
-  Serial.println("Pchamber:" + (String) Pchamber);
+  Serial.println("Pchamber:" + (String)Pchamber);
 
-  if (Pchamber > Pdesiredinhale || Pchamber < Pdesiredinhale - (Pmargin * Pdesiredinhale)) {
+  if (Pchamber > Pdesiredinhale || Pchamber < Pdesiredinhale - (Pmargin * Pdesiredinhale))
+  {
 
     cancelledPinWarn = false;
     Serial.println("PinWarn|1");
@@ -622,9 +673,12 @@ void mixture() {
     lcd.print("WARNING");
     Pchamber = Pinhale;
   }
-  else {
-    if (!cancelledPinWarn) {
-      for (int i = 0; i < 10; i++) {
+  else
+  {
+    if (!cancelledPinWarn)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("PinWarn|0");
       }
       cancelledPinWarn = true;
@@ -637,19 +691,22 @@ void mixture() {
 
   //simulate the FiO2 value
   FiO2 = random(19, 25);
-  Serial.println("FiO2|" + (String) FiO2);
+  Serial.println("FiO2|" + (String)FiO2);
 
-  if (Pchamber <= Pdesiredinhale + (Pmargin * Pdesiredinhale)) {
+  if (Pchamber <= Pdesiredinhale + (Pmargin * Pdesiredinhale))
+  {
 
+    if (FiO2 >= FiO2f - FiO2margin)
+    {
 
-    if (FiO2 >= FiO2f - FiO2margin) {
-
-      if (ACopen == 0) {
+      if (ACopen == 0)
+      {
         AirCompressor.write(maxACAngle);
         ACopen = 1;
       }
 
-      if (O2open == 1) {
+      if (O2open == 1)
+      {
         O2.write(0);
         O2open = 0;
       }
@@ -658,14 +715,17 @@ void mixture() {
       //O2.write(90);
     }
 
-    if (FiO2 < FiO2f - FiO2margin) {
+    if (FiO2 < FiO2f - FiO2margin)
+    {
 
-      if (ACopen == 0) {
+      if (ACopen == 0)
+      {
         AirCompressor.write(maxACAngle);
         ACopen = 1;
       }
 
-      if (O2open == 0) {
+      if (O2open == 0)
+      {
         O2.write(maxO2Angle);
         O2open = 1;
       }
@@ -675,16 +735,20 @@ void mixture() {
     }
   }
 
-  if (Pchamber > Pdesiredinhale + (Pmargin * Pdesiredinhale)) {
+  if (Pchamber > Pdesiredinhale + (Pmargin * Pdesiredinhale))
+  {
 
-    if (FiO2 >= FiO2f - FiO2margin) {
+    if (FiO2 >= FiO2f - FiO2margin)
+    {
 
-      if (ACopen == 1) {
+      if (ACopen == 1)
+      {
         AirCompressor.write(0);
         ACopen = 0;
       }
 
-      if (O2open == 1) {
+      if (O2open == 1)
+      {
         O2.write(0);
         O2open = 0;
       }
@@ -693,14 +757,17 @@ void mixture() {
       //O2.write(90);
     }
 
-    if (FiO2 < FiO2f - FiO2margin) {
+    if (FiO2 < FiO2f - FiO2margin)
+    {
 
-      if (ACopen == 1) {
+      if (ACopen == 1)
+      {
         AirCompressor.write(0);
         ACopen = 0;
       }
 
-      if (O2open = 0) {
+      if (O2open = 0)
+      {
         O2.write(maxO2Angle);
         O2open = 1;
       }
@@ -710,7 +777,8 @@ void mixture() {
     }
   }
 
-  if (FiO2 < 18) {
+  if (FiO2 < 18)
+  {
     cancelledO2inLowAlarm = false;
     Serial.println("O2inLowAlarm|1");
 
@@ -718,10 +786,13 @@ void mixture() {
     digitalWrite(49, LOW);
     digitalWrite(47, HIGH);
   }
-  else {
+  else
+  {
 
-    if (!cancelledO2inLowAlarm) {
-      for (int i = 0; i < 10; i++) {
+    if (!cancelledO2inLowAlarm)
+    {
+      for (int i = 0; i < 10; i++)
+      {
         Serial.println("O2inLowAlarm|0");
       }
       cancelledO2inLowAlarm = true;
@@ -737,18 +808,23 @@ void mixture() {
     double FiO2_3 = 34;
     double FiO2_4 = 39;
     double FiO2_5 = 49;
-    if (FiO2f > FiO2fprev) {
-      if (FiO2_5 > FiO2_4 && FiO2_4 > FiO2_3 && FiO2_3 > FiO2_2 && FiO2_2 > FiO2_1) {
+    if (FiO2f > FiO2fprev)
+    {
+      if (FiO2_5 > FiO2_4 && FiO2_4 > FiO2_3 && FiO2_3 > FiO2_2 && FiO2_2 > FiO2_1)
+      {
       }
-      else {
-        if (O2open == 1) {
+      else
+      {
+        if (O2open == 1)
+        {
           O2.write(0);
           O2open = 0;
         }
 
         delay(O2time);
 
-        if (O2open = 0) {
+        if (O2open = 0)
+        {
           O2.write(maxO2Angle);
           O2open = 1;
         }
@@ -756,18 +832,23 @@ void mixture() {
         delay(O2time);
       }
     }
-    else if (FiO2f < FiO2fprev) {
-      if (FiO2_5 < FiO2_4 && FiO2_4 < FiO2_3 && FiO2_3 < FiO2_2 && FiO2_2 < FiO2_1) {
+    else if (FiO2f < FiO2fprev)
+    {
+      if (FiO2_5 < FiO2_4 && FiO2_4 < FiO2_3 && FiO2_3 < FiO2_2 && FiO2_2 < FiO2_1)
+      {
       }
-      else {
-        if (O2open == 1) {
+      else
+      {
+        if (O2open == 1)
+        {
           O2.write(0);
           O2open = 0;
         }
 
         delay(O2time);
 
-        if (ACopen == 0) {
+        if (ACopen == 0)
+        {
           AirCompressor.write(maxACAngle);
           ACopen = 1;
         }
@@ -775,7 +856,8 @@ void mixture() {
         delay(ACtime);
       }
     }
-    else {
+    else
+    {
       //the sensor should fix itself if it shows weird values actually, scrap this alarm.
     }
   }
@@ -783,7 +865,8 @@ void mixture() {
 
 //----------------------------------------------------------------------converters--------------------------------------------------------------------------------
 
-double hPaToCmH2O(double p) {
+double hPaToCmH2O(double p)
+{
   double pcmh2o = (1.0197442889221 * p) / 100;
   return pcmh2o;
 }
@@ -796,15 +879,17 @@ char data[DATA_MAX_SIZE];
 char *settingName = "none";
 char *newValue = "none";
 
-double interpretData(char* settingName, double current)
+double interpretData(char *settingName, double current)
 {
-  char* readName;
-  char* readValue;
+  char *readName;
+  char *readValue;
   double decValue;
-  for (int i = 0; i < sizeof(data); i++) {
+  for (int i = 0; i < sizeof(data); i++)
+  {
     readName = strtok(data[i], "|");
     readValue = strtok(NULL, "|");
-    if (readName == settingName) {
+    if (readName == settingName)
+    {
       decValue = strtod(readValue, NULL);
       return decValue;
     }
@@ -843,7 +928,8 @@ void receiveData()
   }
 }
 
-void buttonled() {
+void buttonled()
+{
 
   if (digitalRead(7) == HIGH)
   {
@@ -855,21 +941,26 @@ void buttonled() {
   }
   if (digitalRead(5) == HIGH)
   {
-    if (FiO2f == 21) {
+    if (FiO2f == 21)
+    {
       FiO2f += 9;
     }
-    else if (FiO2f == 100) {
-
+    else if (FiO2f == 100)
+    {
     }
-    else FiO2f += 10;
+    else
+      FiO2f += 10;
   }
   if (digitalRead(4) == HIGH)
   {
-    if (FiO2f == 21) {
+    if (FiO2f == 21)
+    {
     }
-    else if (FiO2f == 30) {
+    else if (FiO2f == 30)
+    {
       FiO2f -= 9;
     }
-    else FiO2f -= 10;
+    else
+      FiO2f -= 10;
   }
 }
