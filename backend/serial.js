@@ -15,7 +15,7 @@ async function getArduinoPort() {
 }
 
 async function setupArduino(socket) {
-    const portName = await getArduinoPort();
+    /* const portName = await getArduinoPort();
     const port = new SerialPort(portName, { baudRate: 115200 });
     const parser = port.pipe(new Readline({ delimeter: '\n' }));
 
@@ -35,11 +35,14 @@ async function setupArduino(socket) {
         console.log('[ARD] Error thrown from Arduino serial port');
     });
 
-    parser.on('data', data.arduinoReceiver);
+    parser.on('data', data.arduinoReceiver); */
 
+    const sendToArduino = (name, value) => console.log(`[ARD] Sending ${name}|${value}`);
 
     data.setUpPipe(socket);
     data.reactReceiver(socket, sendToArduino);
+
+    require('./synthetic')(data, socket);
 }
 
 module.exports = setupArduino;
